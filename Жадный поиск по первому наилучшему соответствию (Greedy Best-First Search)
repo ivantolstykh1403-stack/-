@@ -1,0 +1,27 @@
+import heapq
+
+def greedy_best_first(graph, start, goal, heuristic):
+    heap = [(heuristic[start], start)]
+    came_from = {start: None}
+    
+    while heap:
+        _, current = heapq.heappop(heap)
+        
+        if current == goal:
+            # Восстановить путь
+            path = []
+            while current is not None:
+                path.append(current)
+                current = came_from[current]
+            return path[::-1]
+        
+        for neighbor in graph[current]:
+            if neighbor not in came_from:
+                came_from[neighbor] = current
+                heapq.heappush(heap, (heuristic[neighbor], neighbor))
+                
+    return None
+
+# Пример эвристики (расстояние до цели по прямой)
+heuristic_greedy = {'A': 5, 'B': 4, 'C': 3, 'D': 6, 'E': 2, 'F': 0}
+print("Жадный:", greedy_best_first(graph, 'A', 'F', heuristic_greedy))
