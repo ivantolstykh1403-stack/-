@@ -1,0 +1,27 @@
+from collections import deque
+
+def bfs(graph, start, goal):
+    queue = deque([(start, [start])])
+    visited = set([start])
+
+    while queue:
+        current, path = queue.popleft()
+        if current == goal:
+            return path
+        for neighbor in graph[current]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+    return None
+
+# Пример графа (города и дороги)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+print("BFS:", bfs(graph, 'A', 'F'))  # Пример: A -> C -> F
