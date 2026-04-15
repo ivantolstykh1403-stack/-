@@ -1,0 +1,17 @@
+def dfs(graph, start, goal):
+    stack = [(start, [start])]
+    visited = set()
+
+    while stack:
+        current, path = stack.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+        if current == goal:
+            return path
+        for neighbor in reversed(graph[current]):
+            if neighbor not in visited:
+                stack.append((neighbor, path + [neighbor]))
+    return None
+
+print("DFS:", dfs(graph, 'A', 'F'))  # Пример: A -> B -> E -> F
