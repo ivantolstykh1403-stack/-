@@ -1,0 +1,48 @@
+from collections import deque
+
+def bidirectional_search(graph, start, goal):
+    if start == goal:
+        return [start]
+
+    front_queue = deque([start])
+    back_queue = deque([goal])
+    
+    front_parent = {start: None}
+    back_parent = {goal: None}
+    
+    def construct_path(meeting_point):
+        path = []
+        node = meeting_point
+        while node is not None:
+            path.append(node)
+            node = front_parent.get(node)
+        path.reverse()
+        
+        node = back_parent.get(meeting_point)
+        while node is not None:
+            path.append(node)
+            node = back_parent.get(node)
+        return path
+
+    while front_queue and back_queue:
+        # Шаг вперёд
+        current = front_queue.popleft()
+        for neighbor in graph[current]:
+            if neighbor not in front_parent:
+                front_parent[neighbor] = current
+                front_queue.append(neighbor)
+                if neighbor in back_parent:
+                    return construct_path(neighbor)
+        
+        # Шаг назад
+        current = back_queue.popleft()
+        for neighbor in graph[current]:
+            if neighbor not in back_parent:
+                back_parent[neighbor] = current
+                back_queue.append(neighbor)
+                if neighbor in front_parent:
+                    return construct_path(neighbor)
+                    
+    return None
+
+print("Двунаправленный:", bidirectional_search(graph, 'A', 'F'))
